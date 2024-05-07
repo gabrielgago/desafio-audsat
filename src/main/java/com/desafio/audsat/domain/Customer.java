@@ -18,7 +18,7 @@ public class Customer {
 
     private String name;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "driver_id", referencedColumnName = "id")
     private Driver driver;
 
