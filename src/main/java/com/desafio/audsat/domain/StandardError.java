@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @AllArgsConstructor
 @Builder
@@ -13,6 +13,5 @@ import java.time.LocalDateTime;
 public class StandardError {
     private HttpStatus status;
     private String message;
-    private StackTraceElement[] stackTrace;
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 }
