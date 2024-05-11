@@ -14,7 +14,7 @@ public class UserAuthenticated implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "read");
+        return List.of(() -> "ROLE_INSURANCE_COMPANY"); //TODO LEMBRAR DE ATUALIZAR ISSO PARA SER AUTOMATICO
     }
 
     @Override
