@@ -7,7 +7,6 @@ import com.desafio.audsat.response.InsuranceResponse;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
-import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
@@ -19,6 +18,10 @@ public record CustomerDTO(@NotNull String name, @NotNull @Email String email, @N
     }
 
     public Customer toCustomer() {
-        return new ModelMapper().map(this, Customer.class);
+        Customer customer = new Customer();
+        customer.setName(name);
+        customer.setEmail(email);
+        customer.setDocument(document);
+        return customer;
     }
 }
