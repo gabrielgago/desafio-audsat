@@ -2,6 +2,7 @@ package com.desafio.audsat.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ public class UserAuthenticated implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_INSURANCE_COMPANY"); //TODO LEMBRAR DE ATUALIZAR ISSO PARA SER AUTOMATICO
+        return List.of(new SimpleGrantedAuthority("read"), new SimpleGrantedAuthority("write_insurance_company")); //TODO LEMBRAR DE ATUALIZAR ISSO PARA SER AUTOMATICO
     }
 
     @Override
