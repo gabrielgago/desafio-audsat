@@ -11,10 +11,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -25,7 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("customer")
+@RequestMapping("/customer")
 public class CustomerControllerImpl implements CustomerController {
 
     public static final String ALL_CUSTOMERS = "all-customers";
@@ -35,8 +32,8 @@ public class CustomerControllerImpl implements CustomerController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_INSURANCE_COMPANY')")
-    public ResponseEntity<EntityModel<CustomerDTO>> createCustomer(@Valid CustomerDTO request) {
+    @PreAuthorize("hasAnyAuthority('SCOPE_write_insurance_company') or hasAnyAuthority('SCOPE_admin')")
+    public ResponseEntity<EntityModel<CustomerDTO>> createCustomer(@RequestBody @Valid CustomerDTO request) {
         log.info("Creating customer: {}", request);
         Customer customer = customerService.save(request.toCustomer());
         EntityModel<CustomerDTO> resource = EntityModel.of(request);
@@ -46,9 +43,16 @@ public class CustomerControllerImpl implements CustomerController {
                 .buildAndExpand(customer.getId())
                 .toUriString();
 
-        resource.add(linkTo(methodOn(CustomerControllerImpl.class).createCustomer(request)).withSelfRel());
-//        resource.add(linkTo(methodOn(CustomerControllerImpl.class).getAllCustomers()).withRel(ALL_CUSTOMERS));
-
+        resource.add(linkTo(methodOn(CustomerControllerImpl.class).findCustomerById(customer.getId())).withSelfRel());
         return ResponseEntity.created(URI.create(uriString)).body(resource);
+    }
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+//    @Override
+    @PreAuthorize("hasAnyAuthority('SCOPE_read_insurance_company') or hasAnyAuthority('SCOPE_admin')")
+    public ResponseEntity<EntityModel<CustomerDTO>> findCustomerById(@PathVariable Long id) {
+        log.info("Find customer by id: {}", id);
+        return null;
     }
 }
