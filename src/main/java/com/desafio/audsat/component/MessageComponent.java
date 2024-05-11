@@ -13,7 +13,8 @@ public class MessageComponent {
     private final MessageSource messageSource;
     private final Locale locale;
 
-    public String getMessage(String message, Object... args) {
+    public String getMessage(String message,
+                             Object... args) {
         return messageSource.getMessage(message, args, locale);
     }
 }
