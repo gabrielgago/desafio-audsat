@@ -20,12 +20,15 @@ public class Customer {
     @Schema(name = "id", description = "Customer id", example = "1")
     private Long id;
 
+    @Column(nullable = false)
     @Schema(name = "name", description = "Customer name", example = "Gabriel", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
+    @Column(unique = true, nullable = false)
     @Schema(name = "email", description = "Customer mail", example = "gfrael@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
 
+    @Column(unique = true, nullable = false)
     @Schema(name = "document", description = "Customer Document (CPF)", example = "xxx.xxx.xxx-27", requiredMode = Schema.RequiredMode.REQUIRED)
     private String document;
 

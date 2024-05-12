@@ -13,7 +13,7 @@ public record CustomerDTO(@NotNull String name, @NotNull @Email String email, @N
                           Driver driver, Set<Insurance> insurances) {
 
     public static CustomerDTO of(Customer customer) {
-        return new CustomerDTO(customer.getName(), customer.getEmail(), customer.getDocument(), customer.getDriver(), customer.getInsurances());
+        return new CustomerDTO(customer.getName(), customer.getEmail(), customer.getDocument(), null, null);
     }
 
     public Customer toCustomer() {
