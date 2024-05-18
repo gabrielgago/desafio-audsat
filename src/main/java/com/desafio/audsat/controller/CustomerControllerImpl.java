@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +35,14 @@ public class CustomerControllerImpl implements CustomerController {
     public static final String FIND_ALL_PATH = "find-all-costumers";
 
     private final CustomerService customerService;
+
+    @RequestMapping(method = RequestMethod.OPTIONS)
+    public ResponseEntity<Object> options() {
+        return ResponseEntity
+                .ok()
+                .allow(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.OPTIONS)
+                .build();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

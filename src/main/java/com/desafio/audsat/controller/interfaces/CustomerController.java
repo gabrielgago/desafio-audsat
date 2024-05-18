@@ -23,6 +23,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 public interface CustomerController {
 
+    @Operation(summary = "Allowed methods", description = "This endpoint lists the allowed methods")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The allowed methods", content = @Content(examples = @ExampleObject(value = "GET,POST,PUT,DELETE,OPTIONS")), headers = @Header(name = "Allow", description = "What methods are allowed", example = "GET,POST,PUT,DELETE,OPTIONS")),
+            @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
+    })
+    ResponseEntity<Object> options();
+
     @Operation(summary = "Create Customer", description = "This endpoint is by create customer", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CustomerDTO.class))))
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Customer create with success", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(value = """
             {
@@ -36,7 +43,7 @@ public interface CustomerController {
     ResponseEntity<EntityModel<CustomerDTO>> createCustomer(@org.springframework.web.bind.annotation.RequestBody @Valid CustomerDTO request);
 
     @GetMapping("{id}")
-    @Operation(summary = "Find Customer by ID", description = "This endpoint is by find customer by id", parameters = @Parameter(example = "1", description = "Id do costumer to update"))
+    @Operation(summary = "Find Customer by ID", description = "This endpoint is by find customer by id", parameters = @Parameter(example = "1", description = "Id do customer to update"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Payload is wrong", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
@@ -52,7 +59,7 @@ public interface CustomerController {
     ResponseEntity<Void> deleteCustomer(@PathVariable @Min(0) Long id);
 
     @PutMapping("update/{id}")
-    @Operation(summary = "Update Customer", description = "This endpoint is by update customer", parameters = @Parameter(example = "1", description = "Id do costumer to update"), requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CustomerDTO.class))))
+    @Operation(summary = "Update Customer", description = "This endpoint is by update customer", parameters = @Parameter(example = "1", description = "Id do customer to update"), requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CustomerDTO.class))))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Payload is wrong", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
