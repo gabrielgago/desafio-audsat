@@ -4,8 +4,6 @@ import com.desafio.audsat.controller.interfaces.CustomerController;
 import com.desafio.audsat.domain.Customer;
 import com.desafio.audsat.dto.CustomerDTO;
 import com.desafio.audsat.service.CustomerService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
@@ -42,7 +40,7 @@ public class CustomerControllerImpl implements CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('SCOPE_write_insurance_company') or hasAnyAuthority('SCOPE_admin')")
     @Override
-    public ResponseEntity<EntityModel<CustomerDTO>> createCustomer(@RequestBody @Valid CustomerDTO request) {
+    public ResponseEntity<EntityModel<CustomerDTO>> createCustomer(CustomerDTO request) {
         log.info("Creating customer: {}", request);
         Customer customer = customerService.save(request.toCustomer());
         EntityModel<CustomerDTO> resource = EntityModel.of(request);
@@ -60,11 +58,10 @@ public class CustomerControllerImpl implements CustomerController {
         return ResponseEntity.created(URI.create(uriString)).body(resource);
     }
 
-    @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyAuthority('SCOPE_read_insurance_company') or hasAnyAuthority('SCOPE_admin')")
     @Override
-    public ResponseEntity<EntityModel<CustomerDTO>> findCustomerById(@PathVariable @Min(0) Long id) {
+    public ResponseEntity<EntityModel<CustomerDTO>> findCustomerById(Long id) {
         log.info("Find customer by id: {}", id);
         Customer customer = customerService.findById(id);
         EntityModel<CustomerDTO> resource = EntityModel.of(CustomerDTO.of(customer));
@@ -77,29 +74,22 @@ public class CustomerControllerImpl implements CustomerController {
         return ResponseEntity.ok(resource);
     }
 
-    @DeleteMapping("delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyAuthority('SCOPE_read_insurance_company') or hasAnyAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_write_insurance_company') or hasAnyAuthority('SCOPE_admin')")
     @Override
-    public ResponseEntity<Void> deleteCustomer(@PathVariable @Min(0) Long id) {
+    public ResponseEntity<Void> deleteCustomer(Long id) {
         log.info("Deleting customer by id: {}", id);
         customerService.deleteCustomer(id);
         return ResponseEntity
                 .noContent()
-                .header(HttpHeaders.LINK,
-                        linkTo(methodOn(CustomerController.class)
-                                .findAllCustomers())
-                                .withRel(FIND_ALL_PATH)
-                                .toString())
                 .<Void>build();
     }
 
-    @PutMapping("update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyAuthority('SCOPE_read_insurance_company') or hasAnyAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_write_insurance_company') or hasAnyAuthority('SCOPE_admin')")
     @Override
-    public ResponseEntity<EntityModel<CustomerDTO>> updateCustomer(@PathVariable @Min(0) Long id,
-                                                                   @RequestBody @Valid CustomerDTO request) {
+    public ResponseEntity<EntityModel<CustomerDTO>> updateCustomer(Long id,
+                                                                   CustomerDTO request) {
         log.info("Update customer by id: {}", id);
         Customer customerUpdated = customerService.updateCustomer(id, request.toCustomer());
         EntityModel<CustomerDTO> resource = EntityModel.of(CustomerDTO.of(customerUpdated));
@@ -113,7 +103,7 @@ public class CustomerControllerImpl implements CustomerController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyAuthority('SCOPE_read') or hasAnyAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_read_insurance_company') or hasAnyAuthority('SCOPE_admin')")
     @Override
     public ResponseEntity<CollectionModel<CustomerDTO>> findAllCustomers() {
         log.info("Find all customers");

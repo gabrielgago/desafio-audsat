@@ -60,8 +60,7 @@ public class CustomerService {
     @Transactional
     public void deleteCustomer(Long id) {
         log.info("Deleting customer with id: {}", id);
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new AudsatException(MessageFormat.format("Customer id {0} not found", id)));
-        customerRepository.delete(customer);
+        customerRepository.deleteById(id);
     }
 
     /**

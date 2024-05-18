@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +12,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"driver", "insurances"})
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +30,12 @@ public class Customer {
     @Schema(name = "document", description = "Customer Document (CPF)", example = "xxx.xxx.xxx-27", requiredMode = Schema.RequiredMode.REQUIRED)
     private String document;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "driver_id", referencedColumnName = "id")
     @Schema(name = "driver", description = "Driver id", example = "1")
     private Driver driver;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @Schema(name = "insurances", description = "Insurances ids", example = "[1,2,3]")
     private Set<Insurance> insurances = new HashSet<>();
 }
