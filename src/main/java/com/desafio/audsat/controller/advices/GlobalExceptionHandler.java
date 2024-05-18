@@ -4,6 +4,7 @@ import com.desafio.audsat.component.MessageComponent;
 import com.desafio.audsat.domain.DataConstraintsValidation;
 import com.desafio.audsat.domain.StandardError;
 import com.desafio.audsat.domain.ValidationStandardErrorImpl;
+import com.desafio.audsat.exception.AudsatException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
@@ -88,6 +89,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .internalServerError()
                 .body(validationStandardError);
+    }
+
+    @ExceptionHandler(AudsatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<StandardError> handleBusinessExceptions(AudsatException ex) {
+        log.error(messageComponent.getMessage(ERROR_GENERIC, ex.getMessage()), ex);
+        return ResponseEntity
+                .internalServerError()
+                .body(StandardError.builder().status(BAD_REQUEST).message(ex.getMessage()).timestamp(Instant.now()).build());
     }
 
 }
