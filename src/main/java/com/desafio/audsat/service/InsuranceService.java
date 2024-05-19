@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -54,7 +55,7 @@ public class InsuranceService {
 
     private Insurance toInsurance(InsuranceDTO dto) {
         Car car = carService.findById(dto.carId());
-        Customer customer = customerService.findById(dto.costumerId());
+        Customer customer = customerService.findById(dto.customerId());
         return InsuranceFactory.buildInsuranceWithCustomerAndCar(customer, car);
     }
 
@@ -65,5 +66,10 @@ public class InsuranceService {
         insurance.setId(id);
         insurance.setUpdatedDate(LocalDateTime.now());
         return insuranceRepository.save(insurance);
+    }
+
+    public List<Insurance> findAllById(List<Long> ids) {
+        log.info("Searching insurance list with ids: {}", ids);
+        return insuranceRepository.findAllById(ids);
     }
 }
