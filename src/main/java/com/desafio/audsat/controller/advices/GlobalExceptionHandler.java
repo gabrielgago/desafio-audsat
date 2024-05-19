@@ -8,6 +8,7 @@ import com.desafio.audsat.exception.AudsatException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import java.util.regex.Pattern;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
+@Profile("!test")
 @RequiredArgsConstructor
 @Slf4j
 @RestControllerAdvice
@@ -43,11 +45,7 @@ public class GlobalExceptionHandler {
         log.error(messageComponent.getMessage(ERROR_GENERIC, ex.getMessage()), ex);
         return ResponseEntity
                 .internalServerError()
-                .body(StandardError.builder()
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .message(ex.getMessage())
-                        .timestamp(Instant.now())
-                        .build());
+                .body(new StandardError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), Instant.now()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -97,7 +95,7 @@ public class GlobalExceptionHandler {
         log.error(messageComponent.getMessage(ERROR_GENERIC, ex.getMessage()), ex);
         return ResponseEntity
                 .internalServerError()
-                .body(StandardError.builder().status(BAD_REQUEST).message(ex.getMessage()).timestamp(Instant.now()).build());
+                .body(new StandardError(BAD_REQUEST, ex.getMessage(), Instant.now()));
     }
 
 }
