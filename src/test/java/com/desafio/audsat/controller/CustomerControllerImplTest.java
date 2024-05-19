@@ -3,6 +3,7 @@ package com.desafio.audsat.controller;
 import com.desafio.audsat.ConfigurationTest;
 import com.desafio.audsat.domain.Customer;
 import com.desafio.audsat.dto.CustomerDTO;
+import com.desafio.audsat.mappers.CustomerMapper;
 import com.desafio.audsat.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
-@ContextConfiguration(classes = {ConfigurationTest.class, AuthenticationTest.class, CustomerControllerImpl.class})
+@ContextConfiguration(classes = {ConfigurationTest.class,
+        AuthenticationTest.class,
+        CustomerControllerImpl.class,
+        CustomerMapper.class,})
 @WebMvcTest(CustomerControllerImpl.class)
 class CustomerControllerImplTest {
 
@@ -32,12 +36,15 @@ class CustomerControllerImplTest {
     private AuthenticationTest authenticationTest;
     @MockBean
     private CustomerService customerService;
+    @MockBean
+    private CustomerMapper customerMapper;
 
     @Test
     void shouldCreateCustomer_WhenRequestIsCorrect() throws Exception {
-        CustomerDTO customerDTO = new CustomerDTO("Gabriel Martins", "gfrael@gmail.com", "147.339.487-27", null, null);
-        Customer customer = customerDTO.toCustomer();
-        customer.setId(1L);
+        CustomerDTO customerDTO = new CustomerDTO("Gabriel Martins", "gfrael@gmail.com", "147.339.487-27", null);
+        Customer customer = new Customer(1L, "Gabriel Martins", "gfrael@gmail.com", "147.339.487-27", null, null);
+
+        Mockito.when(customerMapper.toEntity(customerDTO)).thenReturn(customer);
         Mockito.when(customerService.save(Mockito.any(Customer.class))).thenReturn(customer);
 
         String authenticate = authenticationTest.authenticate();
