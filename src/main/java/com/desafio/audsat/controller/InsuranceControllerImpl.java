@@ -3,6 +3,7 @@ package com.desafio.audsat.controller;
 import com.desafio.audsat.controller.interfaces.InsuranceController;
 import com.desafio.audsat.domain.Insurance;
 import com.desafio.audsat.dto.InsuranceDTO;
+import com.desafio.audsat.mappers.InsuranceMapper;
 import com.desafio.audsat.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ public class InsuranceControllerImpl implements InsuranceController {
     public static final String DELETE_PATH = "delete-insurance";
 
     private final InsuranceService insuranceService;
+    private final InsuranceMapper insuranceMapper;
 
     @RequestMapping(method = RequestMethod.OPTIONS)
     public ResponseEntity<Object> options() {
@@ -73,7 +75,7 @@ public class InsuranceControllerImpl implements InsuranceController {
     public ResponseEntity<EntityModel<InsuranceDTO>> findInsuranceById(Long id) {
         log.info("Find insurance by id: {}", id);
         Insurance insurance = insuranceService.findById(id);
-        EntityModel<InsuranceDTO> resource = EntityModel.of(InsuranceDTO.from(insurance));
+        EntityModel<InsuranceDTO> resource = EntityModel.of(insuranceMapper.fromEntity(insurance));
 
         resource.add(linkTo(methodOn(InsuranceControllerImpl.class).findInsuranceById(id)).withSelfRel(),
                 linkTo(methodOn(InsuranceControllerImpl.class).findAllInsurances()).withRel(ALL_INSURANCES),
@@ -101,7 +103,7 @@ public class InsuranceControllerImpl implements InsuranceController {
                                                                      InsuranceDTO request) {
         log.info("Update insurance by id: {}", id);
         Insurance insuranceUpdated = insuranceService.updateInsurance(id, request);
-        EntityModel<InsuranceDTO> resource = EntityModel.of(InsuranceDTO.from(insuranceUpdated));
+        EntityModel<InsuranceDTO> resource = EntityModel.of(insuranceMapper.fromEntity(insuranceUpdated));
 
         resource.add(linkTo(methodOn(InsuranceControllerImpl.class).findInsuranceById(id)).withRel(FIND_ONE_PATH),
                 linkTo(methodOn(InsuranceControllerImpl.class).findAllInsurances()).withRel(ALL_INSURANCES),
@@ -118,7 +120,7 @@ public class InsuranceControllerImpl implements InsuranceController {
         log.info("Find all insurances");
 
         Set<Insurance> insurances = insuranceService.findAllInsurances();
-        CollectionModel<InsuranceDTO> resources = CollectionModel.of(insurances.stream().map(InsuranceDTO::from).toList());
+        CollectionModel<InsuranceDTO> resources = CollectionModel.of(insurances.stream().map(insuranceMapper::fromEntity).toList());
         List<Link> links = insurances.stream().map(insurance -> List.of(linkTo(methodOn(InsuranceControllerImpl.class).findInsuranceById(insurance.getId())).withRel(FIND_ONE_PATH),
                         linkTo(methodOn(InsuranceControllerImpl.class).deleteInsuranceById(insurance.getId())).withRel(DELETE_PATH),
                         linkTo(methodOn(InsuranceControllerImpl.class).updateInsurance(insurance.getId(), null)).withRel(UPDATE_PATH)))
