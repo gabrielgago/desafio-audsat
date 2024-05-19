@@ -1,10 +1,11 @@
 package com.desafio.audsat.domain;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +13,9 @@ import java.util.Set;
 @Table(name = "cars")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +23,17 @@ public class Car {
 
     private String model;
     private String manufacturer;
-    private String year;
+    @JsonAlias("year")
+    private Year yearOfManufacturing;
 
     @Column(name = "fipe_value")
     private BigDecimal fipeValue;
 
+    @Builder.Default
     @OneToMany(mappedBy = "car")
     private Set<Insurance> insurances = new HashSet<>();
 
     @OneToMany(mappedBy = "car")
     private Set<CarDriver> carDrivers;
+
 }

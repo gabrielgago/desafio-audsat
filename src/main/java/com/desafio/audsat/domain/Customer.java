@@ -3,8 +3,7 @@ package com.desafio.audsat.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +11,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +37,9 @@ public class Customer {
     @Schema(name = "driver", description = "Driver id", example = "1")
     private Driver driver;
 
+    @Builder.Default
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @Schema(name = "insurances", description = "Insurances ids", example = "[1,2,3]")
     private Set<Insurance> insurances = new HashSet<>();
+
 }
