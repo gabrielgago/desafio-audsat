@@ -3,6 +3,7 @@ package com.desafio.audsat.controller;
 import com.desafio.audsat.controller.interfaces.CustomerController;
 import com.desafio.audsat.domain.Customer;
 import com.desafio.audsat.dto.CustomerDTO;
+import com.desafio.audsat.mappers.CustomerMapper;
 import com.desafio.audsat.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class CustomerControllerImpl implements CustomerController {
     public static final String FIND_ALL_PATH = "find-all-costumers";
 
     private final CustomerService customerService;
+    private final CustomerMapper customerMapper;
 
     @RequestMapping(method = RequestMethod.OPTIONS)
     public ResponseEntity<Object> options() {
@@ -50,7 +52,8 @@ public class CustomerControllerImpl implements CustomerController {
     @Override
     public ResponseEntity<EntityModel<CustomerDTO>> createCustomer(CustomerDTO request) {
         log.info("Creating customer: {}", request);
-        Customer customer = customerService.save(request.toCustomer());
+        Customer customer = customerMapper.toEntity(request);
+        customerService.save(customer);
         EntityModel<CustomerDTO> resource = EntityModel.of(request);
 
         final String uriString = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -72,7 +75,7 @@ public class CustomerControllerImpl implements CustomerController {
     public ResponseEntity<EntityModel<CustomerDTO>> findCustomerById(Long id) {
         log.info("Find customer by id: {}", id);
         Customer customer = customerService.findById(id);
-        EntityModel<CustomerDTO> resource = EntityModel.of(CustomerDTO.of(customer));
+        EntityModel<CustomerDTO> resource = EntityModel.of(customerMapper.fromEntity(customer));
 
         resource.add(linkTo(methodOn(CustomerControllerImpl.class).findCustomerById(id)).withSelfRel(),
                 linkTo(methodOn(CustomerControllerImpl.class).findAllCustomers()).withRel(FIND_ALL_PATH),
@@ -99,8 +102,9 @@ public class CustomerControllerImpl implements CustomerController {
     public ResponseEntity<EntityModel<CustomerDTO>> updateCustomer(Long id,
                                                                    CustomerDTO request) {
         log.info("Update customer by id: {}", id);
-        Customer customerUpdated = customerService.updateCustomer(id, request.toCustomer());
-        EntityModel<CustomerDTO> resource = EntityModel.of(CustomerDTO.of(customerUpdated));
+        Customer customer = customerMapper.toEntity(request);
+        Customer customerUpdated = customerService.updateCustomer(id, customer);
+        EntityModel<CustomerDTO> resource = EntityModel.of(customerMapper.fromEntity(customerUpdated));
 
         resource.add(linkTo(methodOn(CustomerControllerImpl.class).findCustomerById(id)).withRel(FIND_ONE_PATH),
                 linkTo(methodOn(CustomerControllerImpl.class).findAllCustomers()).withRel(FIND_ALL_PATH),
@@ -117,7 +121,7 @@ public class CustomerControllerImpl implements CustomerController {
         log.info("Find all customers");
 
         List<Customer> customers = customerService.findAllCustomers();
-        List<CustomerDTO> costomersDTO = customers.stream().map(CustomerDTO::of).toList();
+        List<CustomerDTO> costomersDTO = customers.stream().map(customerMapper::fromEntity).toList();
         CollectionModel<CustomerDTO> resources = CollectionModel.of(costomersDTO);
         List<Link> links = customers.stream().map(c -> List.of(linkTo(methodOn(CustomerControllerImpl.class).findCustomerById(c.getId())).withRel(FIND_ONE_PATH),
                         linkTo(methodOn(CustomerControllerImpl.class).deleteCustomer(c.getId())).withRel(DELETE_PATH),
