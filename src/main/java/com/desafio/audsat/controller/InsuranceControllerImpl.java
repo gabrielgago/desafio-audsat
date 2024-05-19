@@ -51,7 +51,7 @@ public class InsuranceControllerImpl implements InsuranceController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('SCOPE_write_insurance_company') or hasAnyAuthority('SCOPE_admin')")
     @Override
-    public ResponseEntity<EntityModel<InsuranceDTO>> createInsurance(InsuranceDTO request) {
+    public ResponseEntity<EntityModel<InsuranceDTO>> createInsurance(@RequestBody InsuranceDTO request) {
         log.info("Creating insurance: {}", request);
         Insurance insurance = insuranceService.createInsurance(request);
         EntityModel<InsuranceDTO> resource = EntityModel.of(request);

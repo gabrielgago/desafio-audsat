@@ -5,6 +5,7 @@ import com.desafio.audsat.domain.Customer;
 import com.desafio.audsat.domain.Insurance;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class InsuranceFactory {
 
@@ -13,6 +14,8 @@ public class InsuranceFactory {
 
     public static Insurance buildInsuranceWithCustomerAndCar(Customer customer,
                                                              Car car) {
+        Objects.requireNonNull(car, "Car cannot be null");
+        Objects.requireNonNull(customer, "Customer cannot be null");
         Insurance insurance = new Insurance();
         insurance.setCustomer(customer);
         insurance.setCar(car);
