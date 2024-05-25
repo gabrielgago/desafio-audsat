@@ -1,5 +1,6 @@
 package com.desafio.audsat.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Insurance {
+public class Insurance extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +25,8 @@ public class Insurance {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    private LocalDateTime creationDate;
+    @JsonProperty("creationDate")
+    private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
     @Schema(name = "car", description = "Car id", example = "1")
