@@ -1,6 +1,6 @@
 package com.desafio.audsat.controller.interfaces;
 
-import com.desafio.audsat.dto.CustomerDTO;
+import com.desafio.audsat.dto.CarDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -30,47 +30,70 @@ public interface CarController {
     })
     ResponseEntity<Object> options();
 
-    @Operation(summary = "Create Customer", description = "This endpoint is by create customer", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CustomerDTO.class))))
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Customer create with success", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(value = """
-            {
-              "name": "Gabriel",
-              "email": "gfrael@gmail.com",
-              "document": "326.639.710-06"
+    @Operation(summary = "Create Car", description = "This endpoint is by create car", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CarDTO.class))))
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Car create with success", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(description = "Payload to create a car", value = """
+              {
+              "model": "Model S",
+              "manufacturer": "Tesla",
+              "year": "2020",
+              "fipeValue": 75000.00
             }
             """))), @ApiResponse(responseCode = "400", description = "Payload is wrong", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
     })
-    ResponseEntity<EntityModel<CustomerDTO>> createCustomer(@org.springframework.web.bind.annotation.RequestBody @Valid CustomerDTO request);
+    ResponseEntity<EntityModel<CarDTO>> createCar(@org.springframework.web.bind.annotation.RequestBody @Valid CarDTO request);
 
     @GetMapping("{id}")
-    @Operation(summary = "Find Customer by ID", description = "This endpoint is by find customer by id", parameters = @Parameter(example = "1", description = "Id do customer to update"))
+    @Operation(summary = "Find Car by ID", description = "This endpoint is by find car by id", parameters = @Parameter(example = "1", description = "Id do car to find"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Payload is wrong", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
-            @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
+            @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\"")),
+            @ApiResponse(responseCode = "200", description = "The car finded", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(value = """
+                    {
+                       "model": "Model S",
+                       "manufacturer": "Tesla",
+                       "year": "2020",
+                       "fipeValue": 75000.00,
+                       "carsDrivers": [1, 2],
+                        "insurancesId": [101, 102]
+                     }
+                    """)))
     })
-    ResponseEntity<EntityModel<CustomerDTO>> findCustomerById(@PathVariable @Min(0) Long id);
+    ResponseEntity<EntityModel<CarDTO>> findCarById(@PathVariable @Min(0) Long id);
 
     @DeleteMapping("delete/{id}")
-    @Operation(summary = "Delete Customer", description = "This endpoint is by delete customer", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(example = "1"))))
+    @Operation(summary = "Delete Car", description = "This endpoint is by delete car", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(example = "1"))))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Payload is wrong", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
     })
-    ResponseEntity<Void> deleteCustomer(@PathVariable @Min(0) Long id);
+    ResponseEntity<Void> deleteCar(@PathVariable @Min(0) Long id);
 
     @PutMapping("update/{id}")
-    @Operation(summary = "Update Customer", description = "This endpoint is by update customer", parameters = @Parameter(example = "1", description = "Id do customer to update"), requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CustomerDTO.class))))
+    @Operation(summary = "Update Car", description = "This endpoint is by update car", parameters = @Parameter(example = "1", description = "Id do car to update"), requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CarDTO.class))))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Payload is wrong", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
     })
-    ResponseEntity<EntityModel<CustomerDTO>> updateCustomer(@PathVariable @Min(0) Long id,
-                                                            @org.springframework.web.bind.annotation.RequestBody @Valid CustomerDTO request);
+    ResponseEntity<EntityModel<CarDTO>> updateCar(@PathVariable @Min(0) Long id,
+                                                  @org.springframework.web.bind.annotation.RequestBody @Valid CarDTO request);
 
-    @Operation(summary = "Find All Customers", description = "This endpoint is by find all customers")
+    @Operation(summary = "Find All Cars", description = "This endpoint is by find all cars")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Payload is wrong", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
-            @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\""))
+            @ApiResponse(responseCode = "401", description = "JWT Token invalid", content = @Content(mediaType = "text/plain;charset=UTF-8"), headers = @Header(name = "WWW-Authenticate", description = "What was the problem with given token", example = "Bearer error=\"invalid_token\", error_description=\"An error occurred while attempting to decode the Jwt: Malformed token\", error_uri=\"https://tools.ietf.org/html/rfc6750#section-3.1\"")),
+            @ApiResponse(responseCode = "200", description = "The car finded", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(value = """
+                    [
+                        {
+                           "model": "Model S",
+                           "manufacturer": "Tesla",
+                           "year": "2020",
+                           "fipeValue": 75000.00,
+                           "carsDrivers": [1, 2],
+                            "insurancesId": [101, 102]
+                         }
+                     ]
+                    """)))
     })
-    ResponseEntity<CollectionModel<CustomerDTO>> findAllCustomers();
+    ResponseEntity<CollectionModel<CarDTO>> findAllCars();
 }
