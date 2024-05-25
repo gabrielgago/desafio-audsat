@@ -20,7 +20,7 @@ public class InsuranceFactory {
         insurance.setCustomer(customer);
         insurance.setCar(car);
         insurance.setActive(true);
-        insurance.setCreationDate(LocalDateTime.now());
+        insurance.setCreatedDate(LocalDateTime.now());
         return insurance;
     }
 }

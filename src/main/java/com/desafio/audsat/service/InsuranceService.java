@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ public class InsuranceService {
     public Insurance createInsurance(InsuranceDTO insuranceDTO) {
         log.info("Init create insurance: {}", insuranceDTO);
         Insurance insurance = toInsurance(insuranceDTO);
-        insurance.setCreationDate(LocalDateTime.now());
+        insurance.setCreatedDate(LocalDateTime.now());
         insurance.setActive(true);
         insurance = insuranceRepository.save(insurance);
         log.info("Insurance created with id: {}", insurance.getId());
