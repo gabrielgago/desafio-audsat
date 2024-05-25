@@ -2,6 +2,7 @@ package com.desafio.audsat.controller;
 
 import com.desafio.audsat.ConfigurationTest;
 import com.desafio.audsat.domain.Customer;
+import com.desafio.audsat.domain.Driver;
 import com.desafio.audsat.dto.CustomerDTO;
 import com.desafio.audsat.mappers.CustomerMapper;
 import com.desafio.audsat.service.CustomerService;
@@ -41,8 +42,8 @@ class CustomerControllerImplTest {
 
     @Test
     void shouldCreateCustomer_WhenRequestIsCorrect() throws Exception {
-        CustomerDTO customerDTO = new CustomerDTO("Gabriel Martins", "gfrael@gmail.com", "147.339.487-27", null);
-        Customer customer = new Customer(1L, "Gabriel Martins", "gfrael@gmail.com", "147.339.487-27", null, null);
+        CustomerDTO customerDTO = new CustomerDTO("Gabriel Martins", "gfrael@gmail.com", "147.339.487-27", 1L);
+        Customer customer = new Customer(1L, "Gabriel Martins", "gfrael@gmail.com", "147.339.487-27", new Driver(), null);
 
         Mockito.when(customerMapper.toEntity(customerDTO)).thenReturn(customer);
         Mockito.when(customerService.save(Mockito.any(Customer.class))).thenReturn(customer);

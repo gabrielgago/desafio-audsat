@@ -31,9 +31,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CustomerControllerImpl implements CustomerController {
 
     public static final String FIND_ONE_PATH = "find-customer";
-    public static final String UPDATE_PATH = "update-costumer";
-    public static final String DELETE_PATH = "delete-costumer";
-    public static final String FIND_ALL_PATH = "find-all-costumers";
+    public static final String UPDATE_PATH = "update-customer";
+    public static final String DELETE_PATH = "delete-customer";
+    public static final String FIND_ALL_PATH = "find-all-customers";
 
     private final CustomerService customerService;
     private final CustomerMapper customerMapper;
