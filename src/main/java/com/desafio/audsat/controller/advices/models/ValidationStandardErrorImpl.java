@@ -1,4 +1,4 @@
-package com.desafio.audsat.domain;
+package com.desafio.audsat.controller.advices.models;
 
 import org.springframework.http.HttpStatus;
 

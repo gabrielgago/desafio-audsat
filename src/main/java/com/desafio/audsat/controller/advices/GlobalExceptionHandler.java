@@ -1,9 +1,9 @@
 package com.desafio.audsat.controller.advices;
 
 import com.desafio.audsat.component.MessageComponent;
-import com.desafio.audsat.domain.DataConstraintsValidation;
-import com.desafio.audsat.domain.StandardError;
-import com.desafio.audsat.domain.ValidationStandardErrorImpl;
+import com.desafio.audsat.controller.advices.models.DataConstraintsValidation;
+import com.desafio.audsat.controller.advices.models.StandardError;
+import com.desafio.audsat.controller.advices.models.ValidationStandardErrorImpl;
 import com.desafio.audsat.exception.AudsatException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
